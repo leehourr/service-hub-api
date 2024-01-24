@@ -21,6 +21,8 @@ Route::group([
 ], function ($router) {
     //auth
     Route::post('signup', [AuthController::class, 'signup']);
+    Route::post('email-signup', [AuthController::class, 'signup']);
+    Route::post('number-signup', [AuthController::class, 'signup']);
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
 

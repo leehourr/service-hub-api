@@ -45,6 +45,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function otpCode()
+    {
+        return $this->hasOne(OtpCode::class);
+    }
 
     public function bookings()
     {
