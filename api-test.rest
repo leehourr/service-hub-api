@@ -1,1 +1,14 @@
-#
+###to test. install rest-client extension
+
+###signup 
+POST  http://127.0.0.1:8000/api/v1/signup
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "test",
+    "username": "test123",
+    "phone_number": "012541579",
+    "account_type": "client",
+    "password": "Lyhour99"
+}

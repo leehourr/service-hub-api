@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('ratings_reviews', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('rating');
-            $table->text('review');
+            $table->text('review')->nullable();
             $table->timestamps();
 
             $table->integer('user_id')->unsigned()->nullable();

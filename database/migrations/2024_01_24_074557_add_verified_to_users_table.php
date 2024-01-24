@@ -10,9 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('participants', function (Blueprint $table) {
-            $table->integer('chat_id')->unsigned()->nullable();
-            $table->foreign('chat_id')->references('id')->on('chats')->onDelete('cascade');
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('verified')->default(false)->nullable();
         });
     }
 
@@ -21,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('participants', function (Blueprint $table) {
-            $table->dropColumn('chat_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('verified');
         });
     }
 };
