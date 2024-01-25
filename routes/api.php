@@ -21,9 +21,11 @@ Route::group([
 ], function ($router) {
     //auth
     Route::post('signup', [AuthController::class, 'signup']);
-    Route::post('email-signup', [AuthController::class, 'signup']);
-    Route::post('number-signup', [AuthController::class, 'signup']);
-    Route::post('login', [AuthController::class, 'login']);
+    // Route::post('email-signup', [AuthController::class, 'emailSignup']);
+    // Route::post('number-signup', [AuthController::class, 'numberSignup']);
+    Route::post('number-signin', [AuthController::class, 'numberSigninHandler']);
+    Route::post('email-signin', [AuthController::class, 'emailSigninHandler']);
+    Route::post('verify-otp', [AuthController::class, 'verifyCodeHandler']);
     Route::post('logout', [AuthController::class, 'logout']);
 
 

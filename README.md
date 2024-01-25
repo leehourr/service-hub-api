@@ -13,12 +13,11 @@ No API key is required for interacting with this API. The API utilizes standard 
 
 ## Endpoints
 
-1. **User Registration**
-   - **POST /v1/signup**: Register a new user account with essential information.
+https://github.com/leehourr/service-hub-api/blob/main/api-test.rest
 
 ## Error Handling
 
-Expect standard HTTP status codes along with clear error messages in JSON format. Refer to the documentation for specific codes and meanings.
+Expect standard HTTP status codes along with error messages in JSON format. Refer to the documentation for specific codes and meanings.
 
 ## Versioning
 

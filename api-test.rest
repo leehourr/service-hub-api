@@ -7,8 +7,28 @@ Content-Type: application/json
 
 {
     "name": "test",
-    "username": "test123",
+    "username": "test1234",
     "phone_number": "012541579",
     "account_type": "client",
     "password": "Lyhour99"
+}
+
+###login with number (only works with cambodian dialog code +855)
+### 'SMS Info'as sender name cuz free trial
+POST  http://127.0.0.1:8000/api/v1/number-signin
+Accept: application/json
+Content-Type: application/json
+
+{
+    "phone_number": "85578870993"
+}
+
+###verify otp code
+POST  http://127.0.0.1:8000/api/v1/verify-otp
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_id": "4",
+    "code": "39000"
 }
