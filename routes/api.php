@@ -46,8 +46,8 @@ Route::group([
 
     //Appointment
     Route::get('appointment-list', [AppointmentController::class, 'getAppointment']);
-    Route::post('appointment', [AppointmentController::class, 'addAppoinment']);
-    Route::delete('appointment/{apppointment_id}', [AppointmentController::class, 'cancelAppoinment']);
+    Route::post('appointment/{service_provider_id}/{booking_id}', [AppointmentController::class, 'addAppointment']);
+    Route::delete('appointment/{appointment_id}', [AppointmentController::class, 'cancelAppointment']);
 
     //review
     Route::post('submit-review/{service_provider_id}', [ReviewController::class, 'submitReview']);

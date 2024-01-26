@@ -75,10 +75,11 @@ class BookingController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
+            // Booking::where('id', $booking_id)->forceDelete();
             Booking::destroy($booking_id);
 
             DB::commit();
-            return response()->json(['message' => 'Booking cancel'], 201);
+            return response()->json(['message' => 'Booking cancelled'], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
