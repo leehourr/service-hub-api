@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceListingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +39,18 @@ Route::group([
     Route::patch('edit-service/{id}', [ServiceListingController::class, 'editService']);
     Route::delete('remove-service/{id}', [ServiceListingController::class, 'removeService']);
 
+    //booking
+    Route::get('booking-list', [BookingController::class, 'getBooking']);
+    Route::post('booking/{service_provider_id}', [BookingController::class, 'addBooking']);
+    Route::delete('booking/{booking_id}', [BookingController::class, 'cancelBooking']);
 
+    //Appointment
+    Route::get('appointment-list', [AppointmentController::class, 'getAppointment']);
+    Route::post('appointment', [AppointmentController::class, 'addAppoinment']);
+    Route::delete('appointment/{apppointment_id}', [AppointmentController::class, 'cancelAppoinment']);
+
+    //review
+    Route::post('submit-review/{service_provider_id}', [ReviewController::class, 'submitReview']);
 
 
 });
