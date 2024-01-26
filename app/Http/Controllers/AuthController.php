@@ -14,6 +14,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
+        //the included method will not get check in the jwt middleware
         $this->middleware('auth:api', ['except' => ['numberSigninHandler', 'verifyCodeHandler', 'login', 'signup']]);
     }
 
@@ -49,7 +50,7 @@ class AuthController extends Controller
                 'name' => $credential['name'],
                 'username' => $credential['username'],
                 'phone_number' => $credential['phone_number'],
-                'email' => $credential['email'],
+                'email' => $credential['email'] ?? null,
                 'account_type' => $credential['account_type'],
                 'password' => $hashedPassword,
             ]);
@@ -59,11 +60,15 @@ class AuthController extends Controller
             DB::rollBack();
             if ($e instanceof \Illuminate\Database\QueryException) {
                 $errorCode = $e->errorInfo[1];
+                $errorMessage = ($e->errorInfo[2] && strpos($e->errorInfo[2], 'username') !== false)
+                    ? 'Username must be unique.'
+                    : 'Phone number must be unique.';
 
                 if ($errorCode == 1062) { // MySQL error code for duplicate entry
                     return response()->json([
-                        'errMessage' => 'Username must be unique.'
+                        'errMessage' => $errorMessage
                     ], 400);
+
                 }
             }
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
@@ -153,31 +158,35 @@ class AuthController extends Controller
         }
     }
 
+
+    //regular username/number password login
     public function login(Request $request)
     {
         try {
             $data = $request->validate([
-                'username' => 'required',
+                'username' => 'nullable',
+                'phone_number' => 'nullable|numeric',
                 'password' => 'required',
             ]);
 
-            $user = User::where('username', $data['username'])->first();
+            $username = $data['username'] ?? null;
+            $phoneNumber = $data['phone_number'] ?? null;
+
+            $user = User::where('username', $username)
+                ->orWhere('phone_number', $phoneNumber)
+                ->first();
             if (!$user || !Hash::check($data['password'], $user['password'])) {
                 return response()->json(["message" => "Incorrect credentials"], 403);
             }
-            $accounType = AccountType::where('id', $user['account_type_id'])->first();
 
             $customClaims = [
-                'iss' => 'wbs',
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'account_type_id' => $accounType->id,
-                'account_type' => $accounType->account_type
+                'iss' => 'Service Hub',
+                'data' => $user
             ];
 
             $token = JWTAuth::claims($customClaims)->fromUser($user);
-            // return response()->json($token, 200);
 
+            DB::commit();
             return $this->respondWithToken($token);
         } catch (\Throwable $e) {
             // DB::rollBack();
@@ -205,11 +214,12 @@ class AuthController extends Controller
 
     private function _generateCode($email, $phone)
     {
+        $formattedNumber = '855' . ltrim($phone, '0');
         $code = rand(10000, 99999); {
             if ($email) {
                 // Mail::to($email)->send(new VerificationCodeMailable($code));
-            } else if ($phone) {
-                $this->smsNotificationHandler($phone, $code);
+            } else if ($formattedNumber) {
+                $this->smsNotificationHandler($formattedNumber, $code);
             }
         }
 

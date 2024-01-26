@@ -7,9 +7,9 @@ Content-Type: application/json
 
 {
     "name": "test",
-    "username": "test1234",
-    "phone_number": "012541579",
-    "account_type": "client",
+    "username": "mathtutor939",
+    "phone_number": "012323279",
+    "account_type": "service_provider",
     "password": "Lyhour99"
 }
 
@@ -20,7 +20,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "phone_number": "85578870993"
+    "phone_number": "078870993"
 }
 
 ###verify otp code
@@ -30,5 +30,50 @@ Content-Type: application/json
 
 {
     "user_id": "4",
-    "code": "39000"
+    "code": "19983"
 }
+
+###username/phone-number and password login
+POST  http://127.0.0.1:8000/api/v1/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "username": "test123",
+    "password": "Lyhour99"
+}
+
+###adding service as a service provider
+POST  http://127.0.0.1:8000/api/v1/add-service
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIxODc0MCwiZXhwIjoxNzM3Nzc2MzQwLCJuYmYiOjE3MDYyMTg3NDAsImp0aSI6IndkRFlrdXR4QVh3T3VSR2wiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjEsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjAxMjU0MTU3OSIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoic2VydmljZV9wcm92aWRlciIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjEzOjI1LjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wMS0yNFQwMToxMzoyNS4wMDAwMDBaIiwidXNlcm5hbWUiOiJ0ZXN0MTIzIiwidmVyaWZpZWQiOjB9fQ.rvu5HnI4M5laMtZlXwbyONJqS50jSb445c6murBOaig
+
+{
+    "service_name":  "babysitting",
+    "service_description": "test",
+    "service_category": "Childcare and Babysitting",
+    "pricing": "12.2"
+}
+
+###Service List
+GET  http://127.0.0.1:8000/api/v1/service-list
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIxODc0MCwiZXhwIjoxNzM3Nzc2MzQwLCJuYmYiOjE3MDYyMTg3NDAsImp0aSI6IndkRFlrdXR4QVh3T3VSR2wiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjEsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjAxMjU0MTU3OSIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoic2VydmljZV9wcm92aWRlciIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjEzOjI1LjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wMS0yNFQwMToxMzoyNS4wMDAwMDBaIiwidXNlcm5hbWUiOiJ0ZXN0MTIzIiwidmVyaWZpZWQiOjB9fQ.rvu5HnI4M5laMtZlXwbyONJqS50jSb445c6murBOaig
+
+###Edit service
+PATCH http://127.0.0.1:8000/api/v1/edit-service/1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIxODc0MCwiZXhwIjoxNzM3Nzc2MzQwLCJuYmYiOjE3MDYyMTg3NDAsImp0aSI6IndkRFlrdXR4QVh3T3VSR2wiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjEsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjAxMjU0MTU3OSIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoic2VydmljZV9wcm92aWRlciIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjEzOjI1LjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wMS0yNFQwMToxMzoyNS4wMDAwMDBaIiwidXNlcm5hbWUiOiJ0ZXN0MTIzIiwidmVyaWZpZWQiOjB9fQ.rvu5HnI4M5laMtZlXwbyONJqS50jSb445c6murBOaig
+
+{
+    "service_description": "new description 2"
+}
+
+###remove service
+DELETE http://127.0.0.1:8000/api/v1/remove-service/1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIxODc0MCwiZXhwIjoxNzM3Nzc2MzQwLCJuYmYiOjE3MDYyMTg3NDAsImp0aSI6IndkRFlrdXR4QVh3T3VSR2wiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjEsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjAxMjU0MTU3OSIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoic2VydmljZV9wcm92aWRlciIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjEzOjI1LjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wMS0yNFQwMToxMzoyNS4wMDAwMDBaIiwidXNlcm5hbWUiOiJ0ZXN0MTIzIiwidmVyaWZpZWQiOjB9fQ.rvu5HnI4M5laMtZlXwbyONJqS50jSb445c6murBOaig

@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->increments('id');
             $table->text('service_description');
             $table->string('service_category');
-            $table->decimal('pricing', 10, 2);
+            $table->decimal('pricing', 10, 2)->nullable();
             $table->timestamps();
 
             $table->integer('service_provider_id')->unsigned()->nullable();
