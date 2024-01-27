@@ -41,7 +41,8 @@ class BookingController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            $hasBooked = Booking::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id])->exists();
+            $hasBooked = Booking::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id, 'status' => 'pending'])->exists();
+            return response()->json($hasBooked, 422);
 
             if ($hasBooked) {
                 return response()->json(['message' => 'You already booked this service.'], 422);

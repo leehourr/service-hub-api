@@ -42,7 +42,7 @@ class AppointmentController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            $hasBooked = Appointment::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id])->exists();
+            $hasBooked = Appointment::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id, 'status' => 'pending'])->exists();
 
             if ($hasBooked) {
                 return response()->json(['message' => 'Appointment already made'], 422);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\RatingsReview;
 use Illuminate\Http\Request;
 use DB;
@@ -23,6 +24,18 @@ class ReviewController extends Controller
             // return response()->json($user, 200);
             if ($user['account_type'] != 'client') {
                 return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            $hasBooked = Booking::where('user_id', $user['id'])->exists();
+
+            $hasReviewed = RatingsReview::where('user_id', $user['id'])->exists();
+
+            if (!$hasBooked) {
+                return response()->json(['message' => 'Only client or past client can leave review'], 403);
+            }
+
+            if ($hasReviewed) {
+                return response()->json(['message' => 'You can only leave one review'], 403);
             }
 
             $data = $request->validate([
