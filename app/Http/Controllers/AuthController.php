@@ -31,7 +31,7 @@ class AuthController extends Controller
             $credential = $request->validate(
                 [
                     'name' => 'required',
-                    'username' => 'required',
+                    'username' => 'nullable',
                     'phone_number' => 'nullable|numeric',
                     'email' => 'nullable|email',
                     'account_type' => 'required|in:service_provider,client',
@@ -43,12 +43,20 @@ class AuthController extends Controller
                     ],
                 ],
             );
+            $cleanedName = strtolower(str_replace(' ', '', $credential['name']));
+            $randomNumber = rand(100, 999);
+            $generatedUsername = $cleanedName . $randomNumber;
 
+            // Check if the generated username already exists
+            while (User::where('username', $generatedUsername)->exists()) {
+                $randomNumber = rand(100, 999);
+                $generatedUsername = $cleanedName . $randomNumber;
+            }
             $hashedPassword = Hash::make($credential['password']);
 
             $res = User::create([
                 'name' => $credential['name'],
-                'username' => $credential['username'],
+                'username' => $cleanedName . $randomNumber,
                 'phone_number' => $credential['phone_number'],
                 'email' => $credential['email'] ?? null,
                 'account_type' => $credential['account_type'],
