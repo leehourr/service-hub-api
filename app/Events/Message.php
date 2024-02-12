@@ -31,7 +31,20 @@ class Message
     public function broadcastOn(): array
     {
         return [
-            new Channel('Chat'),
+            new Channel('chat-channel'),
+        ];
+    }
+
+    public function broadcastAs()
+    {
+        return 'chat-event';
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->message,
+            'isUser' => true, // You need to set the 'isUser' field based on your logic
         ];
     }
 }

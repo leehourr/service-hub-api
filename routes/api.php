@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceListingController;
 use Illuminate\Http\Request;
@@ -52,5 +53,9 @@ Route::group([
     //review
     Route::post('submit-review/{service_provider_id}', [ReviewController::class, 'submitReview']);
 
+    //chat
+    Route::post('send-chat/{user_id}', [ChatController::class, 'sendChat']);
+    Route::get('view-chat/{chat_id}', [ChatController::class, 'viewChat']);
+    Route::get('chat-list/{user_id}', [ChatController::class, 'getChatList']);
 
 });

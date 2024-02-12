@@ -172,19 +172,18 @@ class AuthController extends Controller
     {
         try {
             $data = $request->validate([
-                'username' => 'nullable',
-                'phone_number' => 'nullable|numeric',
+                'account' => 'required',
                 'password' => 'required',
             ]);
 
-            $username = $data['username'] ?? null;
-            $phoneNumber = $data['phone_number'] ?? null;
+            $account = $data['account'];
 
-            $user = User::where('username', $username)
-                ->orWhere('phone_number', $phoneNumber)
+            $user = User::where('username', $account)
+                ->orWhere('phone_number', $account)
                 ->first();
+
             if (!$user || !Hash::check($data['password'], $user['password'])) {
-                return response()->json(["message" => "Incorrect credentials"], 403);
+                return response()->json(["errMessage" => "Incorrect credentials"], 403);
             }
 
             $customClaims = [

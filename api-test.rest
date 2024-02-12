@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
     "name": "test",
-    "phone_number": "012323279",
+    "phone_number": "0123232793",
     "account_type": "client",
     "password": "Lyhour99"
 }
@@ -38,8 +38,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "username": "test1234",
-    "password": "Lyhour99"
+    "account": "078870993",
+    "password": "Lyhour9999"
 }
 
 ###adding service as a service provider
@@ -120,11 +120,6 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIzNjY2MywiZXhwIjoxNzM3Nzk0MjYzLCJuYmYiOjE3MDYyMzY2NjMsImp0aSI6Img2MVphMGVmZURwcG14UG4iLCJzdWIiOiI0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjQsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjA3ODg3MDk5MyIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoiY2xpZW50IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDEtMjRUMDE6NDY6NDYuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjQ2OjQ2LjAwMDAwMFoiLCJ1c2VybmFtZSI6InRlc3QxMjM0IiwidmVyaWZpZWQiOjB9fQ.0yNWQk-Gu2uYsMbBds5-irkzcJ8ejC-fLCmRLWlqVZ0
 
-
-
-
-
-
 ###submit review
 POST http://127.0.0.1:8000/api/v1/submit-review/1
 Accept: application/json
@@ -133,4 +128,39 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlI
 
 {
     "rating": 4
+}
+
+###send chat
+POST http://127.0.0.1:8000/api/v1/send-chat/84
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIzNjY2MywiZXhwIjoxNzM3Nzk0MjYzLCJuYmYiOjE3MDYyMzY2NjMsImp0aSI6Img2MVphMGVmZURwcG14UG4iLCJzdWIiOiI0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjQsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjA3ODg3MDk5MyIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoiY2xpZW50IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDEtMjRUMDE6NDY6NDYuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjQ2OjQ2LjAwMDAwMFoiLCJ1c2VybmFtZSI6InRlc3QxMjM0IiwidmVyaWZpZWQiOjB9fQ.0yNWQk-Gu2uYsMbBds5-irkzcJ8ejC-fLCmRLWlqVZ0
+
+{
+    "message_text": "hello",
+    "sender_id":4,
+}
+
+###view chat
+GET  http://127.0.0.1:8000/api/v1/view-chat/17
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIzNjY2MywiZXhwIjoxNzM3Nzk0MjYzLCJuYmYiOjE3MDYyMzY2NjMsImp0aSI6Img2MVphMGVmZURwcG14UG4iLCJzdWIiOiI0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjQsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjA3ODg3MDk5MyIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoiY2xpZW50IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDEtMjRUMDE6NDY6NDYuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjQ2OjQ2LjAwMDAwMFoiLCJ1c2VybmFtZSI6InRlc3QxMjM0IiwidmVyaWZpZWQiOjB9fQ.0yNWQk-Gu2uYsMbBds5-irkzcJ8ejC-fLCmRLWlqVZ0
+
+{
+    "message_text": "reply",
+    "sender_id":4,
+    "chat_id":16
+}
+
+###chat list
+GET  http://127.0.0.1:8000/api/v1/chat-list/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTZXJ2aWNlIEh1YiIsImlhdCI6MTcwNjIzNjY2MywiZXhwIjoxNzM3Nzk0MjYzLCJuYmYiOjE3MDYyMzY2NjMsImp0aSI6Img2MVphMGVmZURwcG14UG4iLCJzdWIiOiI0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImRhdGEiOnsiaWQiOjQsIm5hbWUiOiJ0ZXN0IiwiZW1haWwiOm51bGwsInBob25lX251bWJlciI6IjA3ODg3MDk5MyIsInNvY2lhbF9tZWRpYV9pZCI6bnVsbCwiYWNjb3VudF90eXBlIjoiY2xpZW50IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDEtMjRUMDE6NDY6NDYuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDI0LTAxLTI0VDAxOjQ2OjQ2LjAwMDAwMFoiLCJ1c2VybmFtZSI6InRlc3QxMjM0IiwidmVyaWZpZWQiOjB9fQ.0yNWQk-Gu2uYsMbBds5-irkzcJ8ejC-fLCmRLWlqVZ0
+
+{
+    "message_text": "reply",
+    "sender_id":4,
+    "chat_id":16
 }
