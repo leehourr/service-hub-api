@@ -20,8 +20,30 @@ class BookingController extends Controller
             $payload = auth()->payload();
             $user = $payload['data'];
 
-            $bookingList = Booking::where('user_id', $user['id'])->orWhere('service_provider_id', $user['id'])->get();
-            return response()->json(['data' => $bookingList], 201);
+            $userBookings = Booking::with(['user', 'serviceProvider'])
+                ->where('user_id', $user['id'])
+                ->get();
+
+            // Fetch bookings for the user as a service provider
+            $providerBookings = Booking::with(['user', 'serviceProvider'])
+                ->where('service_provider_id', $user['id'])
+                ->get();
+
+            // Merge the results
+            $bookingList = $userBookings->merge($providerBookings);
+            // Map the results and structure the response
+            $formattedBookings = $bookingList->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'service_name' => $booking->service->service_name,
+                    'provider_name' => $booking->serviceProvider->name,
+                    'client_name' => $booking->user->name,
+                    'book_date' => $booking->created_at,
+                    'status' => $booking->status,
+                    // Add other fields as needed
+                ];
+            });
+            return response()->json(['data' => $formattedBookings], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
@@ -29,7 +51,7 @@ class BookingController extends Controller
         }
     }
 
-    public function addBooking(Request $request, $service_provider_id)
+    public function addBooking(Request $request, $service_provider_id, $service_id)
     {
         DB::beginTransaction();
         try {
@@ -41,16 +63,30 @@ class BookingController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            $hasBooked = Booking::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id, 'status' => 'pending'])->exists();
-            return response()->json($hasBooked, 422);
+            $hasBooked = Booking::where(['user_id' => $user['id'], 'service_provider_id' => $service_provider_id, 'service_id' => $service_id])->first();
+            // return response()->json($hasBooked, 422);
+            // return response()->json(['message' => 'You already booked this service.', 'data' => $hasBooked], 200);
 
-            if ($hasBooked) {
-                return response()->json(['message' => 'You already booked this service.'], 422);
+            if ($hasBooked && $hasBooked['status'] == "cancelled") {
+                $success = $hasBooked->update(['status' => "pending"]);
+                DB::commit();
+                if ($success) {
+                    return response()->json(['message' => 'Rebook successfully', 'data' => $hasBooked], 200);
+                } else {
+                    return response()->json(['message' => 'Update failed.'], 500);
+                }
             }
+
+            if ($hasBooked && $hasBooked['status'] == "pending") {
+                DB::commit();
+                return response()->json(['message' => 'You already booked this service.'], 200);
+            }
+
 
             $booking = Booking::create([
                 'date_time' => Carbon::now(),
                 'user_id' => $user['id'],
+                'service_id' => $service_id,
                 'service_provider_id' => $service_provider_id,
                 'created_at' => Carbon::now()
             ]);
@@ -76,11 +112,11 @@ class BookingController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            // Booking::where('id', $booking_id)->forceDelete();
-            Booking::destroy($booking_id);
+            $booking = Booking::where('id', $booking_id)->update(['status' => "cancelled"]);
+            // Booking::destroy($booking_id);
 
             DB::commit();
-            return response()->json(['message' => 'Booking cancelled'], 201);
+            return response()->json(['message' => 'Booking cancelled', 'data' => $booking], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());

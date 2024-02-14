@@ -11,6 +11,8 @@ class Booking extends Model
     use HasFactory;
 
     use SoftDeletes;
+
+    protected $table = "bookings";
     protected $fillable = [
         'date_time',
         'status',
@@ -28,5 +30,10 @@ class Booking extends Model
     public function serviceProvider()
     {
         return $this->belongsTo(User::class, 'service_provider_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(ServiceListing::class, 'service_id');
     }
 }
