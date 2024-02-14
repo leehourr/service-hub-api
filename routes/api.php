@@ -47,6 +47,7 @@ Route::group([
     Route::get('booking-list', [BookingController::class, 'getBooking']);
     Route::post('booking/{service_provider_id}/{service_id}', [BookingController::class, 'addBooking']);
     Route::delete('booking/{booking_id}', [BookingController::class, 'cancelBooking']);
+    Route::post('accept-booking/{client_id}/{booking_id}', [BookingController::class, 'acceptBooking']);
 
     //Appointment
     Route::get('appointment-list', [AppointmentController::class, 'getAppointment']);

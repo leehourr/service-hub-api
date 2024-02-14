@@ -21,7 +21,28 @@ class AppointmentController extends Controller
             $payload = auth()->payload();
             $user = $payload['data'];
 
-            $appointmentList = Appointment::where('user_id', $user['id'])->orWhere('service_provider_id', $user['id'])->get();
+            $appointments = Appointment::with(['user', 'serviceProvider', 'bookings.service'])
+                ->where('user_id', $user['id'])
+                ->orWhere('service_provider_id', $user['id'])
+                ->get();
+
+            $appointmentList = $appointments->map(function ($appointment) {
+                return [
+                    'id' => $appointment->id,
+                    'date_time' => $appointment->date_time,
+                    'status' => $appointment->status,
+                    'created_at' => $appointment->created_at,
+                    'updated_at' => $appointment->updated_at,
+                    'user_id' => $appointment->user_id,
+                    'service_provider_id' => $appointment->service_provider_id,
+                    'deleted_at' => $appointment->deleted_at,
+                    'booking_id' => $appointment->booking_id,
+                    'name' => $appointment->user->name,
+                    'provider_name' => $appointment->serviceProvider->name,
+                    'service_name' => $appointment->bookings->service->service_name,  // Assuming you have a 'serviceListing' relationship in your Booking model
+                ];
+            });
+
             return response()->json(['data' => $appointmentList], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -29,6 +50,8 @@ class AppointmentController extends Controller
             return response()->json(['errMessage' => $e->getMessage()], 500);
         }
     }
+
+
 
     public function addAppointment(Request $request, $service_provider_id, $booking_id)
     {

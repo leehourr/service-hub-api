@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use DB;
@@ -38,6 +39,7 @@ class BookingController extends Controller
                     'service_name' => $booking->service->service_name,
                     'provider_name' => $booking->serviceProvider->name,
                     'client_name' => $booking->user->name,
+                    'client_id' => $booking->user->id,
                     'book_date' => $booking->created_at,
                     'status' => $booking->status,
                     // Add other fields as needed
@@ -93,6 +95,47 @@ class BookingController extends Controller
 
             DB::commit();
             return response()->json(['message' => 'Service booked successfully', 'data' => $booking], 201);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
+            return response()->json(['errMessage' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function acceptBooking(Request $request, $client_id, $booking_id)
+    {
+        DB::beginTransaction();
+        try {
+
+            $payload = auth()->payload();
+            $user = $payload['data'];
+
+            if ($user['account_type'] != 'service_provider') {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            $booking = Booking::where(['id' => $booking_id, 'user_id' => $client_id, 'service_provider_id' => $user['id']])->first();
+
+            if ($booking && $booking['status'] == "pending") {
+                $success = $booking->update(['status' => "accepted"]);
+                DB::commit();
+                if ($success) {
+                    Appointment::create(
+                        [
+                            'date_time' => Carbon::now(),
+                            'user_id' => $client_id,
+                            'service_provider_id' => $user['id'],
+                            'booking_id' => $booking_id
+                        ]
+                    );
+                    return response()->json(['message' => 'Booking acccepted', 'data' => $booking], 200);
+                } else {
+                    return response()->json(['message' => 'Update failed.'], 500);
+                }
+            }
+
+            return response()->json(['message' => 'Booking updated', 'data' => $booking], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());

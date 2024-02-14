@@ -32,4 +32,10 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class, 'service_provider_id');
     }
+
+    public function bookings()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+
+    }
 }
