@@ -13,7 +13,7 @@ class ServiceListingController extends Controller
     public function __construct()
     {
         //the included method will not get check in the jwt middleware
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware('auth:api', ['except' => ['getServiceList']]);
     }
     public function addServiceHandler(Request $request)
     {
@@ -55,6 +55,39 @@ class ServiceListingController extends Controller
         }
     }
 
+    public function getServiceList()
+    {
+        try {
+            // $payload = auth()->payload();
+            // $user = $payload['data'];
+            // return response()->json($user, 200);
+
+            $services = ServiceListing::with('serviceProvider')->get();
+
+            $services = $services->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'service_description' => $service->service_description,
+                    'service_category' => $service->service_category,
+                    'pricing' => $service->pricing,
+                    'created_at' => $service->created_at,
+                    'updated_at' => $service->updated_at,
+                    'service_provider_id' => $service->service_provider_id,
+                    'service_name' => $service->service_name,
+                    'status' => $service->status,
+                    'name' => $service->serviceProvider->name,
+                    'image' => $service->image,
+                ];
+            });
+
+            DB::commit();
+            return response()->json(['data' => $services], 200);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
+            return response()->json(['errMessage' => $e->getMessage()], 500);
+        }
+    }
     public function getServiceHandler()
     {
         try {

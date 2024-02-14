@@ -35,6 +35,7 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
 
     //service-listing
+    Route::get('service', [ServiceListingController::class, 'getServiceList']);
     Route::post('add-service', [ServiceListingController::class, 'addServiceHandler']);
     Route::get('service-list', [ServiceListingController::class, 'getServiceHandler']);
     Route::patch('edit-service/{id}', [ServiceListingController::class, 'editService']);
@@ -55,7 +56,9 @@ Route::group([
 
     //chat
     Route::post('send-chat/{user_id}', [ChatController::class, 'sendChat']);
-    Route::get('view-chat/{chat_id}', [ChatController::class, 'viewChat']);
+    Route::get('view-chat/{sender_id}/{user_id}', [ChatController::class, 'viewChat']);
     Route::get('chat-list/{user_id}', [ChatController::class, 'getChatList']);
+    Route::delete('removechat/{chat_id}', [ChatController::class, 'deleteChat']);
+
 
 });
