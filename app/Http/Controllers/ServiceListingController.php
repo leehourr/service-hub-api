@@ -13,8 +13,44 @@ class ServiceListingController extends Controller
     public function __construct()
     {
         //the included method will not get check in the jwt middleware
-        $this->middleware('auth:api', ['except' => ['getServiceList']]);
+        $this->middleware('auth:api', ['except' => ['getServiceList', 'searchService']]);
     }
+
+    public function searchService($search)
+    {
+        try {
+            $results = ServiceListing::where('service_name', 'like', '%' . $search . '%')
+                ->orWhere('service_category', 'like', '%' . $search . '%')
+                ->orWhere('service_description', 'like', '%' . $search . '%')
+                ->orWhereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                ->get();
+
+            $services = $results->map(function ($service) use ($search) {
+                return [
+                    'id' => $service->id,
+                    'service_description' => $service->service_description,
+                    'service_category' => $service->service_category,
+                    'pricing' => $service->pricing,
+                    'created_at' => $service->created_at,
+                    'updated_at' => $service->updated_at,
+                    'service_provider_id' => $service->service_provider_id,
+                    'service_name' => $service->service_name,
+                    'status' => $service->status,
+                    'name' => $service->user->name,
+                    'image' => $service->image,
+                ];
+            });
+
+            return response()->json(['data' => $services], 200);
+        } catch (\Throwable $e) {
+
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
+            return response()->json(['errMessage' => $e->getMessage()], 500);
+        }
+    }
+
     public function addServiceHandler(Request $request)
     {
         DB::beginTransaction();
@@ -62,7 +98,7 @@ class ServiceListingController extends Controller
             // $user = $payload['data'];
             // return response()->json($user, 200);
 
-            $services = ServiceListing::with('serviceProvider')->get();
+            $services = ServiceListing::with('user')->get();
 
             $services = $services->map(function ($service) {
                 return [
@@ -75,7 +111,7 @@ class ServiceListingController extends Controller
                     'service_provider_id' => $service->service_provider_id,
                     'service_name' => $service->service_name,
                     'status' => $service->status,
-                    'name' => $service->serviceProvider->name,
+                    'name' => $service->user->name,
                     'image' => $service->image,
                 ];
             });

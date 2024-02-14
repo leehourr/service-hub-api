@@ -19,8 +19,8 @@ class ServiceListing extends Model
         'service_provider_id',
         'status'
     ];
-    
-    public function serviceProvider()
+
+    public function user()
     {
         return $this->belongsTo(User::class, 'service_provider_id');
     }

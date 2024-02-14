@@ -40,6 +40,8 @@ Route::group([
     Route::get('service-list', [ServiceListingController::class, 'getServiceHandler']);
     Route::patch('edit-service/{id}', [ServiceListingController::class, 'editService']);
     Route::delete('remove-service/{id}', [ServiceListingController::class, 'removeService']);
+    Route::get('search-service/{search}', [ServiceListingController::class, 'searchService']);
+
 
     //booking
     Route::get('booking-list', [BookingController::class, 'getBooking']);
