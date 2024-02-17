@@ -103,7 +103,7 @@ class AppointmentController extends Controller
             Appointment::destroy($appointment_id);
 
             DB::commit();
-            return response()->json(['message' => 'Appoinement cancelled'], 201);
+            return response()->json(['message' => 'Appoinement canceled'], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Error Message:" . $e->getMessage());
